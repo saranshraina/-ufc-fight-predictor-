@@ -73,12 +73,16 @@ def refresh_events_record():
 
 
 def _load_events_record():
-    """Load from disk, refreshing if file is older than 6 hours."""
+    """Load from disk, refreshing if stale or if any past event is still marked incomplete."""
     try:
         age = (datetime.now().timestamp() - os.path.getmtime(EVENTS_RECORD_PATH)) / 3600
         if age < 6:
             with open(EVENTS_RECORD_PATH) as f:
-                return json.load(f)
+                records = json.load(f)
+            today = datetime.now().strftime("%Y-%m-%d")
+            # If any past event is still incomplete the cache is stale — force refresh
+            if not any(not r.get("completed") and r.get("date", "9999-99-99") < today for r in records):
+                return records
     except Exception:
         pass
     return refresh_events_record()
@@ -164,6 +168,7 @@ def _record_to_event(r):
     return {
         "name":      r["name"],
         "date":      date_fmt,
+        "date_iso":  r["date"],
         "location":  r["location"],
         "url":       r["id"],
         "completed": r.get("completed", False),
@@ -185,7 +190,7 @@ def get_upcoming_events():
 def get_recent_completed_events(n=3):
     """Return last n completed events, newest first."""
     completed = [e for e in get_all_events() if e["completed"]]
-    completed.sort(key=lambda e: e["date"], reverse=True)
+    completed.sort(key=lambda e: e.get("date_iso", e["date"]), reverse=True)
     return completed[:n]
 
 

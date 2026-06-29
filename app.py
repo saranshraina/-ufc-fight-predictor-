@@ -452,6 +452,28 @@ vegas_baseline = 0.685
 vs_vegas = accuracy - vegas_baseline
 
 
+# ── Startup freshness check ───────────────────────────────────────────────────
+# Run once per session: if any past event is still marked incomplete in the
+# Streamlit in-memory cache, clear it and pull fresh data from ESPN.
+if "events_freshness_checked" not in st.session_state:
+    st.session_state["events_freshness_checked"] = True
+    try:
+        import json as _json
+        with open(scraper.EVENTS_RECORD_PATH) as _f:
+            _records = _json.load(_f)
+        _today = datetime.now().strftime("%Y-%m-%d")
+        _stale = any(not r.get("completed") and r.get("date", "9999-99-99") < _today for r in _records)
+        if _stale:
+            scraper.refresh_events_record()
+            fetch_all_events.clear()
+            fetch_upcoming_events.clear()
+            fetch_recent_events.clear()
+            fetch_event_fights.clear()
+            fetch_completed_results.clear()
+    except Exception:
+        pass
+
+
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("## 🥊 UFC Predictor")
