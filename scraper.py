@@ -285,7 +285,7 @@ def scrape_fighter_stats(fighter_url):
         return {}
     try:
         html  = _get(fighter_url)
-        soup  = BeautifulSoup(html, "lxml")
+        soup  = BeautifulSoup(html, "html.parser")
         stats = {}
 
         for item in soup.select("li.b-list__box-list-item"):
@@ -325,7 +325,7 @@ def find_fighter_url(fighter_name):
     char = last_name[0].lower()
     try:
         html  = _get(f"http://ufcstats.com/statistics/fighters?char={char}&page=all")
-        soup  = BeautifulSoup(html, "lxml")
+        soup  = BeautifulSoup(html, "html.parser")
         rows  = soup.select("tr.b-statistics__table-row")
         candidates = []
         for row in rows:
