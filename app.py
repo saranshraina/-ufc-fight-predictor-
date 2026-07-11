@@ -510,7 +510,7 @@ if page == "Upcoming Events":
     with col_title:
         st.markdown("Live fight cards from **ufcstats.com** with AI win predictions.")
     with col_refresh:
-        if st.button("🔄 Refresh", use_container_width=True):
+        if st.button("🔄 Refresh", width='stretch'):
             scraper.refresh_events_record()
             fetch_all_events.clear()
             fetch_upcoming_events.clear()
@@ -541,7 +541,7 @@ if page == "Upcoming Events":
             c2.markdown(f"**Location:** {ev['location']}")
 
             st.markdown("")
-            if st.button("⚡ Run AI Predictions", type="primary", use_container_width=True):
+            if st.button("⚡ Run AI Predictions", type="primary", width='stretch'):
                 with st.spinner("Fetching fighter stats and running predictions..."):
                     fights = fetch_event_fights(ev["url"])
 
@@ -676,7 +676,7 @@ if page == "Upcoming Events":
                             leg_selections.append(None)
 
                 st.markdown("")
-                if st.button("⚡ Calculate Parlay", type="primary", use_container_width=True):
+                if st.button("⚡ Calculate Parlay", type="primary", width='stretch'):
                     valid_legs = [l for l in leg_selections if l is not None]
                     if len(valid_legs) < 2:
                         st.error("Select at least 2 fights.")
@@ -792,7 +792,7 @@ if page == "Upcoming Events":
                                 "Method": b.get("method","—") or "—",
                                 "Class": b.get("weight_class",""),
                             })
-                        st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+                        st.dataframe(pd.DataFrame(rows), hide_index=True, width='stretch')
 
     with tab_recent:
         with st.spinner("Fetching recent results..."):
@@ -826,7 +826,7 @@ if page == "Upcoming Events":
                             "Method": f.get("method", "—") or "—",
                             "Class": f.get("weight_class", "—"),
                         })
-                    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+                    st.dataframe(pd.DataFrame(rows), hide_index=True, width='stretch')
                 st.markdown("---")
 
 
@@ -870,7 +870,7 @@ elif page == "Fight Predictor":
                                  label_visibility="collapsed")
 
     st.markdown("")
-    predict_btn = st.button("⚡ Predict Fight", use_container_width=True, type="primary")
+    predict_btn = st.button("⚡ Predict Fight", width='stretch', type="primary")
 
     if predict_btn:
         if red_name == blue_name:
@@ -970,7 +970,7 @@ elif page == "Fight Predictor":
             ))
             fig_gauge.update_layout(paper_bgcolor="#0e1117", font_color="white",
                                     height=260, margin=dict(t=60,b=10,l=30,r=30))
-            st.plotly_chart(fig_gauge, use_container_width=True)
+            st.plotly_chart(fig_gauge, width='stretch')
 
             # Dual radar
             st.markdown("### Style Comparison")
@@ -994,7 +994,7 @@ elif page == "Fight Predictor":
                 height=380, margin=dict(l=40,r=40,t=40,b=40),
                 legend=dict(bgcolor="#0e1117",font=dict(color="white")),
             )
-            st.plotly_chart(fig_radar, use_container_width=True)
+            st.plotly_chart(fig_radar, width='stretch')
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1062,7 +1062,7 @@ elif page == "Fighter Lookup":
         # Win method donut
         fig_donut = method_donut(hist, name)
         if fig_donut:
-            st.plotly_chart(fig_donut, use_container_width=True)
+            st.plotly_chart(fig_donut, width='stretch')
 
         # Recent fights table
         st.markdown(f"**Last {min(10, len(hist))} fights**")
@@ -1073,7 +1073,7 @@ elif page == "Fighter Lookup":
             "event_date": "Date", "opponent": "Opponent",
             "method": "Method", "weight_class": "Class",
         })[["Date","Opponent","Result","Method","Class"]]
-        st.dataframe(recent_display, hide_index=True, use_container_width=True)
+        st.dataframe(recent_display, hide_index=True, width='stretch')
 
     if f1 != "— select —" and f2 != "— none —" and f1 != f2:
         col_l, col_r = st.columns(2)
@@ -1084,7 +1084,7 @@ elif page == "Fighter Lookup":
 
         # Quick predict button
         st.markdown("---")
-        if st.button(f"⚡ Predict {f1} vs {f2}", type="primary", use_container_width=True):
+        if st.button(f"⚡ Predict {f1} vs {f2}", type="primary", width='stretch'):
             r_stats = fighters_df[fighters_df["name"]==f1].iloc[0].to_dict() if not fighters_df[fighters_df["name"]==f1].empty else {}
             b_stats = fighters_df[fighters_df["name"]==f2].iloc[0].to_dict() if not fighters_df[fighters_df["name"]==f2].empty else {}
             if r_stats and b_stats:
@@ -1142,7 +1142,7 @@ elif page == "Model Dashboard":
         fig_imp.update_layout(paper_bgcolor="#0e1117", plot_bgcolor="#0e1117", font_color="white",
             height=480, xaxis=dict(showgrid=False,zeroline=False,showticklabels=False),
             yaxis=dict(showgrid=False), margin=dict(l=10,r=60,t=20,b=20))
-        st.plotly_chart(fig_imp, use_container_width=True)
+        st.plotly_chart(fig_imp, width='stretch')
 
     with col_cm:
         st.markdown("### Confusion Matrix")
@@ -1152,7 +1152,7 @@ elif page == "Model Dashboard":
             color_continuous_scale=[[0,"#0e1117"],[1,"#e63946"]], text_auto=True)
         fig_cm.update_layout(paper_bgcolor="#0e1117", plot_bgcolor="#0e1117", font_color="white",
             height=320, margin=dict(l=10,r=10,t=20,b=20), coloraxis_showscale=False)
-        st.plotly_chart(fig_cm, use_container_width=True)
+        st.plotly_chart(fig_cm, width='stretch')
 
         st.markdown("### Model Params")
         st.markdown("""
@@ -1180,7 +1180,7 @@ elif page == "Model Dashboard":
     fig_wc.update_layout(paper_bgcolor="#0e1117", plot_bgcolor="#0e1117", font_color="white",
         height=360, showlegend=False, coloraxis_showscale=False,
         xaxis=dict(tickangle=-35), margin=dict(l=10,r=10,t=30,b=10))
-    st.plotly_chart(fig_wc, use_container_width=True)
+    st.plotly_chart(fig_wc, width='stretch')
 
     # ── Backtesting ──────────────────────────────────────────────────────────
     st.markdown("---")
@@ -1244,7 +1244,7 @@ elif page == "Model Dashboard":
                 height=380, yaxis=dict(tickformat=".0%", range=[0.5, 1.0], gridcolor="#222"),
                 xaxis=dict(showgrid=False), margin=dict(l=10, r=10, t=40, b=10),
             )
-            st.plotly_chart(fig_conf, use_container_width=True)
+            st.plotly_chart(fig_conf, width='stretch')
 
         with bt_col2:
             # Accuracy by year
@@ -1266,7 +1266,7 @@ elif page == "Model Dashboard":
                 height=380, yaxis=dict(tickformat=".0%", range=[0.65, 0.80], gridcolor="#222"),
                 xaxis=dict(showgrid=False, dtick=1), margin=dict(l=10, r=10, t=40, b=10),
             )
-            st.plotly_chart(fig_yr, use_container_width=True)
+            st.plotly_chart(fig_yr, width='stretch')
 
         # Accuracy by weight class
         st.markdown("### Accuracy by Weight Class")
@@ -1290,7 +1290,7 @@ elif page == "Model Dashboard":
             height=420, xaxis=dict(tickformat=".0%", range=[0.55, 0.85], gridcolor="#222"),
             yaxis=dict(showgrid=False), margin=dict(l=10, r=120, t=20, b=10),
         )
-        st.plotly_chart(fig_wc2, use_container_width=True)
+        st.plotly_chart(fig_wc2, width='stretch')
 
         # Cumulative accuracy chart
         st.markdown("### Cumulative Accuracy Over Time (Test Set)")
@@ -1311,7 +1311,7 @@ elif page == "Model Dashboard":
             xaxis=dict(showgrid=False), margin=dict(l=10, r=10, t=20, b=10),
             showlegend=False,
         )
-        st.plotly_chart(fig_cum, use_container_width=True)
+        st.plotly_chart(fig_cum, width='stretch')
 
     except Exception as e:
         st.warning(f"Backtest data not available: {e}")
@@ -1323,7 +1323,7 @@ elif page == "Model Dashboard":
         color_discrete_sequence=["#e63946","#4361ee","#f4a261","#2a9d8f","#e9c46a"])
     fig_m.update_layout(paper_bgcolor="#0e1117", font_color="white",
         height=340, margin=dict(l=10,r=10,t=20,b=20), legend=dict(bgcolor="#0e1117"))
-    st.plotly_chart(fig_m, use_container_width=True)
+    st.plotly_chart(fig_m, width='stretch')
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1353,7 +1353,7 @@ elif page == "Fighter Database":
     display_cols = [c for c in display_cols if c in filtered.columns]
     st.markdown(f"**{len(filtered):,} fighters**")
     st.dataframe(filtered[display_cols].sort_values("wins", ascending=False),
-                 hide_index=True, use_container_width=True, height=420)
+                 hide_index=True, width='stretch', height=420)
 
     st.markdown("---")
     st.markdown("### Fighter Profile")
@@ -1391,7 +1391,7 @@ elif page == "Fighter Database":
             angularaxis=dict(gridcolor="#333")),
             paper_bgcolor="#0e1117", font_color="white",
             height=360, margin=dict(l=30,r=30,t=30,b=30), showlegend=False)
-        st.plotly_chart(fig_r, use_container_width=True)
+        st.plotly_chart(fig_r, width='stretch')
 
         if not clean_df.empty:
             hist = get_fighter_history(profile_name, clean_df)
@@ -1400,7 +1400,7 @@ elif page == "Fighter Database":
                 with col_donut:
                     fig_d = method_donut(hist, profile_name)
                     if fig_d:
-                        st.plotly_chart(fig_d, use_container_width=True)
+                        st.plotly_chart(fig_d, width='stretch')
                 with col_hist:
                     st.markdown(f"**Fight History ({len(hist)} fights)**")
                     disp = hist[["event_date","opponent","won","method","weight_class"]].copy()
@@ -1409,4 +1409,4 @@ elif page == "Fighter Database":
                     disp = disp.rename(columns={"event_date":"Date","opponent":"Opponent",
                                                 "method":"Method","weight_class":"Class"})
                     st.dataframe(disp[["Date","Opponent","Result","Method","Class"]],
-                                 hide_index=True, use_container_width=True)
+                                 hide_index=True, width='stretch')
